@@ -1,1 +1,31 @@
-brotha
+
+# import Pin function and module title ADC as well as motor module
+from machine immport Pin, ADC
+from motor import Motor
+
+# Expected distances have yet to be physically measured, will hold placeholder value
+x0 = 0
+x1 = 0
+x2 = 0
+
+# initilisation of analog pins
+adc_A0 = ADC(Pin(26))
+adc_A1 = ADC(Pin(27))
+adc_A2 = ADC(Pin(28))
+
+while True:
+    # Read analog values between 0 and 65536 for all mounted line sensors
+    w0 = adc_A0.read_u16
+    w1 = adc_A1.read_u16
+    w2 = adc_A2.read_u16
+    
+    # Use mathematical relation that calculates estimate for line position in 3 steps
+    x_est_numerator = w0*x0 + w1*x1 + w2*x2
+    x_est_denominator = w0 + w1 + w2
+    x_est = x_est_numerator/x_est_denominator
+    
+    # print the value of x_est onto REPL console
+    print("Distance from line = {:3.2f}".format(x_est))
+    
+    # 50 ms intervals between each print of line distance values
+    sleep(0.1)
